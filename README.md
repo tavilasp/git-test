@@ -3,3 +3,4 @@ Carai Foi Testando os comandos Git
 Agora foi uma pull
 Muiuto estranho
 Tentando mais uma
+Mudei após o Alteração web

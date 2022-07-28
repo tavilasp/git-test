@@ -11,3 +11,5 @@ Alteração feita na web
 Alterando na Branch thiago
 
 Mandando direto pela main 
+
+Tentando Push sem add

@@ -1,0 +1,1716 @@
+openapi: 3.0.1
+info:
+  title: azfun-odtapi-dev
+  version: '2.0.0'
+  description:
+    EZWM integration API
+  
+  
+servers:
+  - description: dev 
+    url: 'https://apim-odtapi-development.azure-api.net/'
+  - description: uat/qa 
+    url: 'https://apim-odtapi-uat.azure-api.net/'
+  - description: staging 
+    url: 'https://apim-odtapi-staging.azure-api.net/'
+  - description: prod 
+    url: 'https://apim-odtapi-prod.azure-api.net/'
+
+
+tags:
+  - name: EZWM
+    description: The EZWM Integration API has the following methods.
+
+paths:
+
+  /GetPrescriptionStatus:
+    post:
+      operationId: getPrescriptionStatus
+      tags:
+      - ezwm
+      security:
+        - oAuth2ClientCred: [api.ezwm.getprescriptionstatus]
+        - oAuth2AuthCode: [app.ezwm.getprescriptionstatus]
+      summary: Get the prescription status.
+      description: Retrieve information about an prescription status
+      requestBody:
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPrescription'
+              examples:
+                'Prescription ID + Access Code (PESEL)':
+                  value:
+                    prescriptionID: 'T1-19-000813595-5'
+                    accessCode: '58080839423'
+                    sysName: 'Softlab ERP'
+                    sysVersion: '106,074,2997'
+                'Prescription ID + Access Code (Birthday)':
+                  value:
+                    prescriptionID: 'T1-19-000813595-5'
+                    accessCode: '19580808'
+                    sysName: 'Softlab ERP'
+                    sysVersion: '106,074,2997'
+                'PESEL + Access Code (PIN)':
+                  value:
+                    pesel: '58080839423'
+                    accessCode: '1234'
+                    sysName: 'Softlab ERP'
+                    sysVersion: '106,074,2997'
+      responses:
+        200:  
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                properties:
+                  nazwa-sys: 
+                    type: string
+                    example: 'System eZWM'
+                  wersja-sys: 
+                    type: string
+                    example: '1.76'
+                  id-trans: 
+                    type: string
+                    example: 'e1736d51-e018-491f-bbe4-32e85481c05f'
+                  data-gen: 
+                    type: string
+                    example: '2020-11-09T16:40:04'
+                    format: datetime
+                  nr-zlecenia-nfz: 
+                    type: string
+                    example: 'T1-19-000813595-5'
+                  status-zlecenia:
+                    properties:
+                      status: 
+                        type: string
+                        example: 'P'
+                      status-realizacji:
+                        properties:
+                          mies-od: 
+                            type: string
+                            example: '2019-12'
+                          lb-mies: 
+                            type: string
+                            example: '12'
+                          status: 
+                            type: string
+                            example: 'B'
+        400:
+         description: Invalid Request
+         content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 400
+                type: InputError
+                message: >-
+                  Could not convert string to DateTime: gfgf. Path
+                  'creationDate', line 2, position 40.
+        401:
+          description: |-
+            Invalid authentication, possible causes:
+             - Expired token
+             - Unknown issuer or audience
+             - Not authorize to call endpoint (don't have right role or scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                statusCode: 401
+                message: Token invalid or missing  
+                
+  /GetPrescriptionDetails:
+  
+    post:
+      operationId: getPrescriptionDetails
+      tags:
+      - ezwm
+      security:
+        - oAuth2ClientCred: [api.ezwm.getprescriptiondetails]
+        - oAuth2AuthCode: [app.ezwm.getprescriptiondetails]
+      summary: Get the prescription details.
+      description: Retrieve information about an prescription details
+      requestBody:
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPrescription'
+              example:
+                  prescriptionID: 'T1-19-000813595-5'
+                  accessCode: '58080839423'
+                  sysName: 'Softlab ERP'
+                  sysVersion: '106,074,2997'
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                properties:
+                  nazwa-sys:
+                    type: string
+                    example: 'System eZWM'
+                  wersja-sys: 
+                    type: string
+                    example: '1.79'
+                  id-trans: 
+                    type: string
+                    example: '1d221223-0a0c-423f-a90e-57c5c36298e9'
+                  data-gen: 
+                    type: string
+                    example: '2020-11-17T13:27:40'
+                    format: datetime
+                  nr-zlecenia-nfz: 
+                    type: string
+                    example: 'T1-20-000101169-9'
+                  dokument-info:
+                    properties:
+                      id-tech-dokumentu-nfz: 
+                        type: string
+                        example: '54187000000000000004404120'
+                  dokument-zpo:
+                    properties:
+                      typ-nad: 
+                        type: string
+                        example: 'S'
+                      ow-nad: 
+                        type: string
+                        example: '07'
+                      id-nad: 
+                        type: string
+                        example: '70061628'
+                      id-inst-nad: 
+                        type: string
+                        example: 'KS:AP-ZZ'
+                      id-tech-dokumentu: 
+                        type: string
+                        example: 'd5a56144-c5f5-4fa2-b7b5-8865b2d22054'
+                      nr-wersji: 
+                        type: string
+                        example: '1'
+                      data-gen: 
+                        type: string
+                        example: '2020-11-17T13:27:39'
+                        format: datetime
+                      zlecenie:
+                        properties:
+                          miejsce-wystawienia-zlecenia:
+                            properties:
+                              nazwa: 
+                                type: string
+                                example: 'CONVATEC POLSKA SP. Z O.O.'
+                              regon: 
+                                type: string
+                                example: '141437294'
+                              swd:
+                                properties:
+                                  ow-nfz: 
+                                    type: string
+                                    example: '07'
+                                  kod-swd: 
+                                    type: string
+                                    example: '70061628'
+                              adres:
+                                properties:
+                                  kod-poczt: 
+                                    type: string
+                                    example: '00-854'
+                                  miejscowosc: 
+                                    type: string
+                                    example: 'WARSZAWA'
+                                  ulica: 
+                                    type: string
+                                    example: 'KROCHMALNA'
+                                  nr-domu: 
+                                    type: string
+                                    example: '32A'
+                                  nr-lokalu:
+                                    type: string
+                                    example: 'null'
+                              pacjent:
+                                properties:
+                                  potw-uprawnien:
+                                    properties:
+                                      oswiadczenie:
+                                        properties:
+                                          data-oswiadczenia: 
+                                            type: string
+                                            example: '2020-11-17'
+                                            format: datetime
+                                          osoba-sklad: 
+                                            type: string
+                                            example: '1'
+                                      dokument:
+                                        properties:
+                                          rodzaj: 
+                                            type: string
+                                            example: '47'
+                                          numer: 
+                                            type: string
+                                            example: 'test1987'
+                                          data-wyst: 
+                                            type: string
+                                            example: '2021-05-03'
+                                            format: datetime
+                                          data-wazn-od:
+                                            type: string
+                                            example: 'null'
+                                          data-wazn-do:
+                                            type: string
+                                            example: 'null'
+                                      tytul-uprawn: 
+                                        type: string
+                                        example: 'BU'
+                                  upraw-dod:
+                                    properties:
+                                      upraw-dod-dok:
+                                          properties:
+                                            rodzaj-dokumentu: 
+                                              type: string
+                                              example: '8'
+                                            nr-dokumentu: 
+                                              type: string
+                                              example: '1189189'
+                                            data-wystawienia: 
+                                              type: string
+                                              example: '2015-11-01'
+                                              format: datetime
+                                            data-waznosci: 
+                                              type: string
+                                              example: '2025-11-30'
+                                            bezterminowy: 
+                                              type: string
+                                              example: 'N'
+                                      upraw-dod-kod: 
+                                        type: string
+                                        example: '47ZN'
+                                  typ-id-osoby: 
+                                    type: string
+                                    example: 'P'
+                                  id-osoby: 
+                                    type: string
+                                    example: '49052231105'
+                                  nazwisko: 
+                                    type: string
+                                    example: 'Uprawnieniem'
+                                  imie: 
+                                    type: string
+                                    example: 'Zlecenie z dodatkowym'
+                                  data-ur: 
+                                    type: string
+                                    example: '1949-05-22'
+                                    format: datetime
+                                  plec:
+                                    type: string
+                                    example: '2'
+                              okreslenie-wyrob-med:
+                                properties:
+                                  wyrob-med:
+                                    properties:
+                                      kod-mz:
+                                        type: string
+                                        example: ' P.99'
+                                      kod-przedm: 
+                                        type: string
+                                        example: 'P.099.PS'
+                                      nazwa-przedm:
+                                          type: string
+                                          example: 'Worki stomijne samoprzylepne jednorazowego użycia w ilości do 90 sztuk w systemie jednoczęściowym lub w równowartości ich kosztu workii płytki w systemie dwuczęściowym lub inny sprzęt stomijny: zestawy irygacyjne, nocne zbiorniki na mocz, pasty, pudry oraz paski, półpierścienie, pierścienie o właściwościach uszczelniających lub gojących, produkty do usuwania sprzętu stomijnego lub do ochrony skóry wokół stomii'
+                                      stomia:
+                                        properties:
+                                          stomia-liczba-przetok: 
+                                            type: string
+                                            example: '1'
+                                          rodzaj: 
+                                            type: string
+                                            example: 'S'
+                                      rodzaj-zaopatrzenia:
+                                        properties:
+                                          zaopatrzenie-comiesieczne:
+                                            properties:
+                                              sposob-ordynacji: 
+                                                type: string
+                                                example: 'P'
+                                              lb-szt-na-mies: 
+                                                type: string
+                                                example: '90'
+                                              okres-zaop-od: 
+                                                type: string
+                                                example: '2020-11'
+                                              okres-zaop-dlug: 
+                                                type: string
+                                                example: '12'
+                                      uzasad-zaopatrz:
+                                        properties:
+                                          kod-icd10: 
+                                            type: string
+                                            example: 'A00.9'
+                                          kryterium-przyznania:
+                                            properties:
+                                              kod-kryterium: 
+                                                type: string
+                                                example: '82'
+                                              nazwa-kryterium: 
+                                                type: string
+                                                example: 'przetoka ślinowa'
+                              dane-dt-wystawienia:
+                                properties:
+                                  data-wystawienia: 
+                                      type: string
+                                      example: '2020-11-17'
+                                      format: datetime
+                                  osoba-uprawniona:
+                                    properties:
+                                      typ-pers-zlec: 
+                                        type: string
+                                        example: '11'
+                                      id-zlec: 
+                                        type: string
+                                        example: '7040454'
+                                      nazwisko: 
+                                        type: string
+                                        example: 'MARCINIAK'
+                                      imie: 
+                                        type: string
+                                        example: 'BOŻENA'
+
+        400:
+         description: Invalid Request
+         content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 400
+                type: InputError
+                message: >-
+                  Could not convert string to DateTime: gfgf. Path
+                  'creationDate', line 2, position 40.
+        401:
+          description: |-
+            Invalid authentication, possible causes:
+             - Expired token
+             - Unknown issuer or audience
+             - Not authorize to call endpoint (don't have right role or scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                statusCode: 401
+                message: Token invalid or missing  
+                
+  /GetPrescriptionReservationStatus:
+  
+    post:
+      operationId: getPrescriptionReservationStatus
+      tags:
+      - ezwm
+      security:
+        - oAuth2ClientCred: [api.ezwm.getprescriptionreservstatus]
+        - oAuth2AuthCode: [app.ezwm.getprescriptionreservstatus]
+      summary: Get the Prescription Reservation Status.
+      description: Retrieve information about an Prescription Reservation Status
+      requestBody:
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPrescriptionStatus'
+              example:
+                  prescriptionID: 'T1-19-000813595-5'
+                  id-tech-dokumentu-nfz: '31023100000000000004402237'
+                  sysName: 'Softlab ERP'
+                  sysVersion: '106,074,2997'
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                properties:
+                  nazwa-sys: 
+                    type: string
+                    example: 'System eZWM'
+                  wersja-sys: 
+                    type: string
+                    example: '1.76'
+                  id-trans: 
+                    type: string
+                    example: '73798e92-0b13-4f1f-93ad-47450f33dba3'
+                  data-gen: 
+                    type: string
+                    example: '2020-11-09T16:43:00'
+                    format: datetime
+                  nr-zlecenia-nfz: 
+                    type: string
+                    example: 'T1-19-000813595-5'
+                  status-weryfikacji:
+                    properties:
+                      mies-od: 
+                        type: string
+                        example: '2020-08'
+                      lb-mies: 
+                        type: string
+                        example: '1'
+                      status: 
+                        type: string
+                        example: 'Z'
+                
+                
+        400:
+         description: Invalid Request
+         content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 400
+                type: InputError
+                message: >-
+                  Could not convert string to DateTime: gfgf. Path
+                  'creationDate', line 2, position 40.
+        401:
+          description: |-
+            Invalid authentication, possible causes:
+             - Expired token
+             - Unknown issuer or audience
+             - Not authorize to call endpoint (don't have right role or scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                statusCode: 401
+                message: Token invalid or missing  
+                
+  /GetPrescriptionRealisationStatus:
+  
+    post:
+      operationId: getPrescriptionRealisationStatus
+      tags:
+      - ezwm
+      security:
+        - oAuth2ClientCred: [api.ezwm.getprescriptionrealisstatus]
+        - oAuth2AuthCode: [app.ezwm.getprescriptionrealisstatus]
+      summary: Get the Prescription Realisation Status.
+      description: Retrieve information about an Prescription Realisation Status
+      requestBody:
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPrescriptionStatus'
+              example:
+                  prescriptionID: 'T1-19-000813595-5'
+                  id-tech-dokumentu-nfz: '31023100000000000004402237'
+                  sysName: 'Softlab ERP'
+                  sysVersion: '106,074,2997'
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                properties:
+                  nazwa-sys: 
+                    type: string
+                    example: 'System eZWM'
+                  wersja-sys: 
+                    type: string
+                    example: '1.76'
+                  id-trans: 
+                    type: string
+                    example: '73798e92-0b13-4f1f-93ad-47450f33dba3'
+                  data-gen: 
+                    type: string
+                    example: '2020-11-09T16:43:00'
+                    format: datetime
+                  nr-zlecenia-nfz: 
+                    type: string
+                    example: 'T1-19-000813595-5'
+                  status-weryfikacji:
+                    properties:
+                      mies-od: 
+                        type: string
+                        example: '2020-08'
+                      lb-mies: 
+                        type: string
+                        example: '1'
+                      status: 
+                        type: string
+                        example: 'Z'
+                
+                
+        400:
+         description: Invalid Request
+         content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 400
+                type: InputError
+                message: >-
+                  Could not convert string to DateTime: gfgf. Path
+                  'creationDate', line 2, position 40.
+        401:
+          description: |-
+            Invalid authentication, possible causes:
+             - Expired token
+             - Unknown issuer or audience
+             - Not authorize to call endpoint (don't have right role or scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                statusCode: 401
+                message: Token invalid or missing  
+
+  /GetPrescriptionRealisationResult:
+    post:
+      operationId: getPrescriptionRealisationResult
+      tags:
+      - ezwm
+      security:
+        - oAuth2ClientCred: [api.ezwm.getprescriptionrealisresult]
+        - oAuth2AuthCode: [app.ezwm.getprescriptionrealisresult]
+      summary: Get the Prescription Realisation Result.
+      description: Retrieve information about an Prescription Realisation Result
+      requestBody:
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPrescription'
+              example:
+                  prescriptionID: 'T1-19-000813595-5'
+                  id-tech-dokumentu-nfz: '31023100000000000004402237'
+                  sysName: 'Softlab ERP'
+                  sysVersion: '106,074,2997'
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                properties:
+                  nazwa-sys: 
+                    type: string
+                    example: 'System eZWM'
+                  wersja-sys: 
+                    type: string
+                    example: '1.78'
+                  id-trans: 
+                    type: string
+                    example: '009cfc01-6746-4329-832b-6706f88021ac'
+                  data-gen: 
+                    type: string
+                    example: '2020-08-06T16:37:15'
+                    format: datetime
+                  nr-zlecenia-nfz: 
+                    type: string
+                    example: 'T1-19-000813595-5'
+                  dokument-info:
+                    properties:
+                      id-tech-dokumentu-nfz: 
+                        type: string
+                    example: '31023100000000000004402237'
+                  dokument-zpo:
+                    properties:
+                      data-gen: 
+                        type: string
+                        example: '2020-08-06T16:37:15'
+                        format: datetime
+                      id-inst-nad: 
+                        type: string
+                        example: 'eZWM'
+                      id-nad: 
+                        type: string
+                        example: '00'
+                      id-tech-dokumentu:
+                        type: string
+                        example:  '4152584'
+                      nr-wersji:
+                        type: string
+                        example:  '1'
+                      ow-nad: 
+                        type: string
+                        example: '00'
+                      typ-nad: 
+                        type: string
+                        example: 'P'
+                      zlecenie:
+                        properties:
+                          nr-zlecenia-nfz: 
+                            type: string
+                            example: 'T1-19-000813595-5'
+                          weryfikacja:
+                            properties:
+                              czesciowa-realizacja: 
+                                type: string
+                                example: 'T'
+                              data-weryfikacji: 
+                                type: string
+                                example: '2020-08-06T16:37:15'
+                                format: datetime
+                              etap: 
+                                type: string
+                                example: 'P'
+                              ow-nfz: 
+                                type: string
+                                example: '04'
+                              mies-realizacji:
+                                properties:
+                                  lb-mies: 
+                                    type: string
+                                    example: '1'
+                                  mies-od: 
+                                    type: string
+                                    example: '2020-08'
+                              wynik-pozytywny:
+                                properties:
+                                  data-wazn-zlec: 
+                                    type: string
+                                    example: '2020-11-30'
+                                    format: datetime
+                                  potw-wyrob-med:
+                                    properties:
+                                      data-waznosci: 
+                                        type: string
+                                        example: '2020-11-30'
+                                        format: datetime
+                                      kod-mz: 
+                                        type: string
+                                        example: 'P.99'
+                                      kod-przedm: 
+                                        type: string
+                                        example: 'P.099.U'
+                                      liczba-szt: 
+                                        type: string
+                                        example: '90'
+                                      limit-ceny: 
+                                        type: string
+                                        example: '480.00'
+                                      refundacja: 
+                                        type: string
+                                        example: '100'
+                                      rodzaj-limitu-ceny: 
+                                        type: string
+                                        example: '1'
+                              potw-uprawnien:
+                                properties:
+                                  tytul-uprawn: 
+                                    type: string
+                                    example: 'U'
+                                  dokument:
+                                    properties:
+                                      rodzaj:
+                                        type: string
+                                        example: '58'
+                
+        400:
+         description: Invalid Request
+         content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 400
+                type: InputError
+                message: >-
+                  Could not convert string to DateTime: gfgf. Path
+                  'creationDate', line 2, position 40.
+        401:
+          description: |-
+            Invalid authentication, possible causes:
+             - Expired token
+             - Unknown issuer or audience
+             - Not authorize to call endpoint (don't have right role or scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                statusCode: 401
+                message: Token invalid or missing  
+
+  /GetPrescriptionReservationResult:
+    post:
+      operationId: getPrescriptionReservationResult
+      tags:
+      - ezwm
+      security:
+        - oAuth2ClientCred: [api.ezwm.getprescriptionreservresult]
+        - oAuth2AuthCode: [app.ezwm.getprescriptionreservresult]
+      summary: Get the Prescription Realisation Status.
+      description: Retrieve information about an Prescription Realisation Status
+      requestBody:
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPrescriptionStatus'
+              example:
+                  prescriptionID: 'T1-19-000813595-5'
+                  id-tech-dokumentu-nfz: '31023100000000000004402237'
+                  sysName: 'Softlab ERP'
+                  sysVersion: '106,074,2997'
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                properties:
+                  nazwa-sys: 
+                    type: string
+                    example: 'System eZWM'
+                  wersja-sys: 
+                    type: string
+                    example: '1.78'
+                  id-trans: 
+                    type: string
+                    example: '009cfc01-6746-4329-832b-6706f88021ac'
+                  data-gen: 
+                    type: string
+                    example: '2020-08-06T16:37:15'
+                    format: datetime
+                  nr-zlecenia-nfz: 
+                    type: string
+                    example: 'T1-19-000813595-5'
+                  dokument-info:
+                    properties:
+                      id-tech-dokumentu-nfz: 
+                        type: string
+                    example: '31023100000000000004402237'
+                  dokument-zpo:
+                    properties:
+                      data-gen: 
+                        type: string
+                        example: '2020-08-06T16:37:15'
+                        format: datetime
+                      id-inst-nad: 
+                        type: string
+                        example: 'eZWM'
+                      id-nad: 
+                        type: string
+                        example: '00'
+                      id-tech-dokumentu:
+                        type: string
+                        example:  '4152584'
+                      nr-wersji:
+                        type: string
+                        example:  '1'
+                      ow-nad: 
+                        type: string
+                        example: '00'
+                      typ-nad: 
+                        type: string
+                        example: 'P'
+                      zlecenie:
+                        properties:
+                          nr-zlecenia-nfz: 
+                            type: string
+                            example: 'T1-19-000813595-5'
+                          weryfikacja:
+                            properties:
+                              czesciowa-realizacja: 
+                                type: string
+                                example: 'T'
+                              data-weryfikacji: 
+                                type: string
+                                example: '2020-08-06T16:37:15'
+                                format: datetime
+                              etap: 
+                                type: string
+                                example: 'P'
+                              ow-nfz: 
+                                type: string
+                                example: '04'
+                              mies-realizacji:
+                                properties:
+                                  lb-mies: 
+                                    type: string
+                                    example: '1'
+                                  mies-od: 
+                                    type: string
+                                    example: '2020-08'
+                              wynik-pozytywny:
+                                properties:
+                                  data-wazn-zlec: 
+                                    type: string
+                                    example: '2020-11-30'
+                                    format: datetime
+                                  potw-wyrob-med:
+                                    properties:
+                                      data-waznosci: 
+                                        type: string
+                                        example: '2020-11-30'
+                                        format: datetime
+                                      kod-mz: 
+                                        type: string
+                                        example: 'P.99'
+                                      kod-przedm: 
+                                        type: string
+                                        example: 'P.099.U'
+                                      liczba-szt: 
+                                        type: string
+                                        example: '90'
+                                      limit-ceny: 
+                                        type: string
+                                        example: '480.00'
+                                      refundacja: 
+                                        type: string
+                                        example: '100'
+                                      rodzaj-limitu-ceny: 
+                                        type: string
+                                        example: '1'
+                              potw-uprawnien:
+                                properties:
+                                  tytul-uprawn: 
+                                    type: string
+                                    example: 'U'
+                                  dokument:
+                                    properties:
+                                      rodzaj:
+                                        type: string
+                                        example: '58'
+                
+        400:
+         description: Invalid Request
+         content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 400
+                type: InputError
+                message: >-
+                  Could not convert string to DateTime: gfgf. Path
+                  'creationDate', line 2, position 40.
+        401:
+          description: |-
+            Invalid authentication, possible causes:
+             - Expired token
+             - Unknown issuer or audience
+             - Not authorize to call endpoint (don't have right role or scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                statusCode: 401
+                message: Token invalid or missing
+                
+  /SetPrescriptionReservation:
+  
+    post:
+      operationId: setPrescriptionReservation
+      tags:
+      - ezwm
+      security:
+        - oAuth2ClientCred: [api.ezwm.setprescriptionreservation]
+        - oAuth2AuthCode: [app.ezwm.setprescriptionreservation]
+      summary: Set the Prescription Reservation.
+      description: Send information to set Prescription Reservation
+      requestBody:
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetPrescriptionReservation'
+              example:
+                sysName: 'Softlab ERP'
+                sysVersion: '106,074,2997'
+                internalRequest:
+                  typ-nad: 'S'
+                  ow-nad: '07'
+                  id-nad: '70061628'
+                  id-inst-nad: 'Softlab ERP'
+                  id-tech-dokumentu: '30310'
+                  nr-wersji: '1'
+                  data-gen: '2020-08-06T16:21:54.91'
+                  zlecenie:
+                    nr-zlecenia-nfz: 'T1-19-000813595-5'
+                    kod-dostepu: '58080839423'
+                    dane-pobrania:
+                      data-pobrania: '2020-08-06'
+                      czesciowa-realizacja: 'T'
+                      mies-realizacji:
+                        mies-od: '2020-08'
+                        lb-mies: '1'
+                      podmiot-realizacji-zlecenia:
+                        nazwa: 'CONVATEC POLSKA SP. Z O.O.'
+                        regon: '141437294'
+                        swd:
+                          ow-nfz: '07'
+                          kod-swd: '70061628'
+                          umowa-z-nfz:
+                            nr-umowy: '070061628200001'
+                      miejsce-realizacji-zlecenia:
+                        kod-tech-miejsca: '54103'
+                        nazwa-miej: 'SKLEP MEDYCZNY MEDICA HUMANA'
+                        adres:
+                          kod-poczt: '00-854'
+                          miejscowosc: 'Warszawa'
+                          ulica: 'KROCHMALNA'
+                          nr-domu: '32A'
+                          kod-kraju: 'PL'
+                      upraw-dod-brak-zmian: '1'
+                      potw-uprawnien-realizator:
+                        tytul-uprawn: 'U'
+                        dokument:
+                          rodzaj: '58'
+                        oswiadczenie:
+                          data-oswiadczenia: '2021-05-07'
+                          osoba-sklad: '1'
+
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                properties:
+                  nazwa-sys: 
+                    type: string
+                    example: 'System eZWM'
+                  wersja-sys: 
+                    type: string
+                    example: '1.76'
+                  id-trans: 
+                    type: string
+                    example: '73798e92-0b13-4f1f-93ad-47450f33dba3'
+                  data-gen: 
+                    type: string
+                    example: '2020-11-09T16:43:00'
+                    format: datetime
+                  nr-zlecenia-nfz: 
+                    type: string
+                    example: 'T1-19-000813595-5'
+                  status-weryfikacji:
+                    properties:
+                      mies-od: 
+                        type: string
+                        example: '2020-08'
+                      lb-mies: 
+                        type: string
+                        example: '1'
+                      status: 
+                        type: string
+                        example: 'Z'
+                
+                
+        400:
+         description: Invalid Request
+         content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 400
+                type: InputError
+                message: >-
+                  Could not convert string to DateTime: gfgf. Path
+                  'creationDate', line 2, position 40.
+        401:
+          description: |-
+            Invalid authentication, possible causes:
+             - Expired token
+             - Unknown issuer or audience
+             - Not authorize to call endpoint (don't have right role or scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                statusCode: 401
+                message: Token invalid or missing
+                
+  /SetPrescriptionRealisation:
+ 
+    post:
+      operationId: setPrescriptionRealisation
+      tags:
+      - ezwm
+      security:
+        - oAuth2ClientCred: [api.ezwm.setprescriptionrealisation]
+        - oAuth2AuthCode: [app.ezwm.setprescriptionrealisation]
+      summary: Set the Prescription Realisation .
+      description: Send information to set Prescription Realisation.
+      requestBody:
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetPrescriptionRealisation'
+              example:
+                sysName: 'Softlab ERP'
+                sysVersion: '106,074,2997'
+                internalRequest:
+                  typ-nad: 'S'
+                  ow-nad: '07'
+                  id-nad: '70061628'
+                  id-inst-nad: 'Softlab ERP'
+                  id-tech-dokumentu: '31023100000000000004402237'
+                  nr-wersji: '201'
+                  data-gen: '2020-08-06T16:57:28.353'
+                  zlecenie:
+                    nr-zlecenia-nfz: 'T1-19-000810165-6'
+                    kod-dostepu: '67051402243'
+                    dane-realizacji:
+                      data-pobrania: '2020-10-30'
+                      czesciowa-realizacja: 'T'
+                      mies-realizacji:
+                        mies-od: '2020-10'
+                        lb-mies: '1'
+                      podmiot-realizacji-zlecenia:
+                        nazwa: 'CONVATEC POLSKA SP. Z O.O.'
+                        regon: '141437294'
+                        swd:
+                          ow-nfz: '07'
+                          kod-swd: '70061628'
+                          umowa-z-nfz:
+                            nr-umowy: '070061628200001'
+                      miejsce-realizacji-zlecenia:
+                        kod-tech: '54103'
+                        nazwa-miej: 'SKLEP MEDYCZNY MEDICA HUMANA'
+                      dane-wyrobu:
+                        wydany-wyrob:
+                          kod-przedm: 'P.099.U'
+                          kwota-refundacji: '150.0000'
+                          kwota-doplaty: '0'
+                          wydany-prod-handl:
+                          - wytworca: 'CONVATEC LIMITED'
+                            model: '64928_STOMADRESS PLUS WOREK UROSTOMIJNY Z PRZYLEPCEM Z MATERIAŁU STOMAHESIVE 25 MM'
+                            nazwa-handlowa: 'STOMADRESS PLUS WOREK UROSTOMIJNY Z PRZYLEPCEM Z MATERIAŁU STOMAHESIVE'
+                            lb-wyd-sztuk: '10'
+                            cena-det-szt: '15'
+                            id-prod-handl: '1977242'
+                            nr-seryjny: ''
+                            mies-od: ''
+                            lb-mies: ''
+                      potwierdzenie-wydania:
+                        data-wydania: '2020-10-30'
+                        rodzaj-wydania: 'O'
+                        nazwisko: 'Kowalski'
+                        imie: 'Jan'
+                      potwierdzenie-odbioru:
+                        data-odbioru: '2020-10-30'
+                        rodzaj-odbioru: 'O'
+                        odbiorca-inna-osoba:
+                          typ-id-osoby: 'P'
+                          id-osoby: '55052889354'
+                          nazwisko: 'Nowak'
+                          imie: 'Jan'
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                properties:
+                  data-czas-przyjecia: 
+                    type: string
+                    example: '2020-10-30T17:14:20'
+                    format: datetime
+                  data-gen: 
+                    type: string
+                    example: '2020-10-30T17:14:20'
+                    format: datetime
+                  id-tech-dokumentu: 
+                    type: string
+                    example: '31023100000000000004402237'
+                  id-tech-dokumentu-nfz: 
+                    type: string
+                    example: '62265000000000000004403790'
+                  id-trans: 
+                    type: string
+                    example: '654797d1-56cf-4628-a044-b8b786373b5c'
+                  nazwa-sys: 
+                    type: string
+                    example: 'System eZWM'
+                  nr-wersji: 
+                    type: string
+                    example: '201'
+                  nr-zlecenia-nfz: 
+                    type: string
+                    example: 'T1-19-000810165-6'
+                  wersja-sys: 
+                    type: string
+                    example: '1.75'
+                  okres:
+                    properties:
+                      lb-mies: 
+                        type: string
+                        example: '1'
+                      mies-od: 
+                        type: string
+                        example: 2020-10
+                
+        400:
+         description: Invalid Request
+         content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 400
+                type: InputError
+                message: >-
+                  Could not convert string to DateTime: gfgf. Path
+                  'creationDate', line 2, position 40.
+        401:
+          description: |-
+            Invalid authentication, possible causes:
+             - Expired token
+             - Unknown issuer or audience
+             - Not authorize to call endpoint (don't have right role or scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                statusCode: 401
+                message: Token invalid or missing
+                
+  /CancelPrescriptionReservation:
+      post:
+        operationId: cancelPrescriptionReservation
+        tags:
+        - ezwm
+        security:
+          - oAuth2ClientCred: [api.ezwm.cancelprescriptionreservation]
+          - oAuth2AuthCode: [app.ezwm.cancelprescriptionreservation]
+        summary: Cancel the Prescription Reservation.
+        description: Does the cancelation of the Prescription Reservation
+        requestBody:
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/CancelPrescription'
+                example:
+                    prescriptionID: 'T1-19-000813595-5'
+                    id-tech-dokumentu-nfz: '31023100000000000004402237'
+                    sysName: 'Softlab ERP'
+                    sysVersion: '106,074,2997'
+        responses:
+          200:
+            description: Successful request
+            content:
+              application/json:
+                schema:
+                  properties:
+                    data-czas-przyjecia: 
+                      type: string
+                      example: '2020-12-08T09:36:20'
+                      format: datetime
+                    data-gen: 
+                      type: string
+                      example: '2020-12-08T09:36:20'
+                      format: datetime
+                    id-tech-dokumentu: 
+                      type: string
+                      example: '99868100000000000004404815'
+                    id-tech-dokumentu-nfz: 
+                      type: string
+                      example: '50788800000000000004404816'
+                    id-trans: 
+                      type: string
+                      example: '6861a0f7-b224-422b-afbf-98854b653193'
+                    nazwa-sys: 
+                      type: string
+                      example: 'System eZWM'
+                    nr-wersji: 
+                      type: string
+                      example: '328'
+                    nr-zlecenia-nfz: 
+                      type: string
+                      example: 'T1-20-000101181-9'
+                    wersja-sys: 
+                      type: string
+                      example: '1.78'
+                    okres:
+                      properties:
+                        lb-mies: 
+                          type: string
+                          example: '1'
+                        mies-od:                 
+                          type: string
+                          example: '2020-12'
+                                      
+          400:
+           description: Invalid Request
+           content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+                example:
+                  code: 400
+                  type: InputError
+                  message: >-
+                    Could not convert string to DateTime: gfgf. Path
+                    'creationDate', line 2, position 40.
+          401:
+            description: |-
+              Invalid authentication, possible causes:
+               - Expired token
+               - Unknown issuer or audience
+               - Not authorize to call endpoint (don't have right role or scope)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+                example:
+                  statusCode: 401
+                  message: Token invalid or missing
+  
+  /CancelPrescriptionRealisation:
+  
+    post:
+      operationId: cancelPrescriptionRealisation
+      tags:
+      - ezwm
+      security:
+        - oAuth2ClientCred: [api.ezwm.cancelprescriptionrealisation]
+        - oAuth2AuthCode: [app.ezwm.cancelprescriptionrealisation]
+      summary: Get the Prescription Realisation Status.
+      description: Retrieve information about an Prescription Realisation Status
+      requestBody:
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelPrescription'
+              example:
+                sysName: 'Softlab ER'
+                sysVersion: '106,074,2997'
+                internalRequest:
+                  typ-nad: 'S'
+                  ow-nad: '07'
+                  id-nad: '70061628'
+                  id-inst-nad: 'Softlab ERP'
+                  id-tech-dokumentu: '30319'
+                  nr-wersji: '1'
+                  data-gen: '2020-08-06T17:09:52.71'
+                  zlecenie:
+                    nr-zlecenia-nfz: 'T1-19-000813595-5'
+                    dane-wycofania:
+                      data-wycofania: '2020-08-06'
+                      czesciowa-realizacja: 'T'
+                      przyczyna: 'Rezygnacja'
+                      mies-wycofania:
+                        mies-od: '2020-08'
+                        lb-mies: '1'
+                      podmiot-wycofujacy:
+                        nazwa: 'CONVATEC POLSKA SP. Z O.O.'
+                        regon: '141437294'
+                        swd:
+                          ow-nfz: '07'
+                          kod-swd: '70061628'
+      responses:
+        200:
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                properties:
+                  data-czas-przyjecia: 
+                    type: string
+                    example: '2020-12-08T09:36:20'
+                    format: dateformat
+                  data-gen: 
+                    type: string
+                    example: '2020-12-08T09:36:20'
+                    format: dateformat
+                  id-tech-dokumentu: 
+                    type: string
+                    example: '99868100000000000004404815'
+                  id-tech-dokumentu-nfz: 
+                    type: string
+                    example: '50788800000000000004404816'
+                  id-trans: 
+                    type: string
+                    example: '6861a0f7-b224-422b-afbf-98854b653193'
+                  nazwa-sys: 
+                    type: string
+                    example: 'System eZWM'
+                  nr-wersji: 
+                    type: string
+                    example: '328'
+                  nr-zlecenia-nfz: 
+                    type: string
+                    example: 'T1-20-000101181-9'
+                  wersja-sys: 
+                    type: string
+                    example: '1.78'
+                  okres:
+                    properties:
+                      lb-mies: 
+                        type: string
+                        example: '1'
+                      mies-od:
+                        type: string
+                        example: '2020-12'
+                
+                
+        400:
+         description: Invalid Request
+         content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 400
+                type: InputError
+                message: >-
+                  Could not convert string to DateTime: gfgf. Path
+                  'creationDate', line 2, position 40.
+        401:
+          description: |-
+            Invalid authentication, possible causes:
+             - Expired token
+             - Unknown issuer or audience
+             - Not authorize to call endpoint (don't have right role or scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                statusCode: 401
+                message: Token invalid or missing
+
+
+                
+components:
+
+  schemas:
+    GetPrescription:
+      properties:
+        prescriptionID:
+          type: string
+        accessCode:
+          type: string
+        pesel:
+          type: string
+        sysName:
+          type: string
+        sysVersion:
+          type: string
+          
+    GetPrescriptionStatus:
+      properties:
+        prescriptionID:
+          type: string
+        id-tech-dokumentu-nfz:
+          type: string
+        sysName:
+          type: string
+        sysVersion:
+          type: string
+          
+    CancelPrescription:
+      properties:
+        sysName: 
+          type: string
+        sysVersion: 
+          type: string
+        internalRequest:
+          properties:
+            typ-nad: 
+              type: string
+            ow-nad:
+              type: string
+            id-nad:
+              type: string
+            id-inst-nad:
+              type: string
+            id-tech-dokumentu:
+              type: string
+            nr-wersji:
+              type: string
+            data-gen:
+              type: string
+              format: datetime
+            zlecenie:
+              properties:
+                nr-zlecenia-nfz:
+                  type: string
+                dane-wycofania:
+                  properties:
+                    data-wycofania:
+                      type: string
+                      format: datetime
+                    czesciowa-realizacja:
+                      type: string
+                      format: datetime
+                    przyczyna:
+                      type: string
+                    mies-wycofania:
+                      properties:
+                          mies-od:
+                            type: string
+                          lb-mies:
+                            type: string
+                    podmiot-wycofujacy:
+                      properties:
+                        nazwa:
+                          type: string
+                        regon:
+                          type: string
+                        swd:
+                          properties:
+                            ow-nfz:
+                              type: string
+                            kod-swd:
+                              type: string
+                              
+    SetPrescriptionRealisation:
+      properties:
+        sysName: 
+          type: string
+        sysVersion: 
+          type: string
+        internalRequest:
+          properties:
+            typ-nad:
+              type: string
+            ow-nad: 
+              type: string
+            id-nad:
+              type: string
+            id-inst-nad: 
+              type: string
+            id-tech-dokumentu: 
+              type: string
+            nr-wersji: 
+              type: string
+            data-gen:
+              type: string
+              format: datetime
+            zlecenie:
+              properties:
+                nr-zlecenia-nfz: 
+                  type: string
+                kod-dostepu: 
+                  type: string
+                dane-realizacji:
+                  properties:
+                    data-pobrania: 
+                      type: string
+                      format: datetime
+                    czesciowa-realizacja: 
+                      type: string
+                    mies-realizacji:
+                      properties:
+                        mies-od: 
+                          type: string
+                        lb-mies: 
+                          type: string
+                    podmiot-realizacji-zlecenia:
+                      properties:
+                        nazwa: 
+                          type: string
+                        regon: 
+                          type: string
+                        swd:
+                          properties:
+                            ow-nfz: 
+                              type: string
+                            kod-swd: 
+                              type: string
+                            umowa-z-nfz:
+                              properties:
+                                nr-umowy: 
+                                  type: string
+                    miejsce-realizacji-zlecenia:
+                      properties:
+                        kod-tech: 
+                          type: string
+                        nazwa-miej: 
+                          type: string
+                    dane-wyrobu:
+                      properties:
+                        wydany-wyrob:
+                          properties:
+                            kod-przedm: 
+                              type: string
+                            kwota-refundacji: 
+                              type: string
+                            kwota-doplaty: 
+                              type: string
+                            wydany-prod-handl:
+                              properties:
+                                wytworca: 
+                                  type: string
+                                model:
+                                  type: string
+                                nazwa-handlowa:
+                                  type: string
+                                lb-wyd-sztuk: 
+                                  type: string
+                                cena-det-szt: 
+                                  type: string
+                                id-prod-handl: 
+                                  type: string
+                                nr-seryjny: 
+                                  type: string
+                                mies-od: 
+                                  type: string
+                                lb-mies: 
+                                  type: string
+                    potwierdzenie-wydania:
+                      properties:
+                        data-wydania: 
+                          type: string
+                          format: datetime
+                        rodzaj-wydania: 
+                          type: string
+                        nazwisko: 
+                          type: string
+                        imie: 
+                          type: string
+                    potwierdzenie-odbioru:
+                      properties:
+                        data-odbioru: 
+                          type: string
+                          format: datetime
+                        rodzaj-odbioru: 
+                          type: string
+                        odbiorca-inna-osoba:
+                          properties:
+                            typ-id-osoby: 
+                              type: string
+                            id-osoby: 
+                              type: string
+                            nazwisko: 
+                              type: string
+                            imie: 
+                              type: string
+                            
+    SetPrescriptionReservation:
+      properties:
+        sysName:
+          type: string
+        sysVersion:
+          type: string
+        internalRequest:
+          properties:
+            typ-nad: 
+              type: string
+            ow-nad: 
+              type: string
+            id-nad:
+              type: string
+            id-inst-nad: 
+              type: string
+            id-tech-dokumentu:
+              type: string
+            nr-wersji:
+              type: string
+            data-gen:
+              type: string
+              format: datetime
+            zlecenie:
+              properties:
+                nr-zlecenia-nfz:
+                  type: string
+                kod-dostepu: 
+                  type: string
+                dane-pobrania:
+                  properties:
+                    data-pobrania:
+                      type: string
+                      format: datetime
+                    czesciowa-realizacja: 
+                      type: string
+                    mies-realizacji:
+                      properties:
+                        mies-od: 
+                          type: string
+                        lb-mies:
+                          type: string
+                    podmiot-realizacji-zlecenia:
+                      properties:
+                        nazwa: 
+                          type: string
+                        regon: 
+                          type: string
+                        swd:
+                          properties:
+                            ow-nfz: 
+                              type: string
+                            kod-swd:
+                              type: string
+                            umowa-z-nfz:
+                              properties:
+                                nr-umowy: 
+                                  type: string
+                    miejsce-realizacji-zlecenia:
+                      properties:
+                        kod-tech-miejsca:
+                          type: string
+                        nazwa-miej: 
+                          type: string
+                        adres:
+                          properties:
+                            kod-poczt: 
+                              type: string
+                            miejscowosc: 
+                              type: string
+                            ulica: 
+                              type: string
+                            nr-domu: 
+                              type: string
+                            kod-kraju: 
+                              type: string
+                    upraw-dod-brak-zmian: 
+                      type: string
+                    potw-uprawnien-realizator:
+                      properties:
+                        tytul-uprawn: 
+                          type: string
+                        dokument:
+                          properties:
+                            rodzaj: 
+                              type: string
+                        oswiadczenie:
+                          properties:
+                            data-oswiadczenia: 
+                              type: string
+                              format: datetime
+                            osoba-sklad: 
+                              type: string
+  
+              
+    Error:
+      type: object
+      required:
+        - code
+        - type
+        - message
+      properties:
+        code:
+          type: number
+        type:
+          type: string  
+        message:
+          type: string
+  
+  securitySchemes:
+    oAuth2AuthCode:
+      type: oauth2
+      description: For more information, see https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow
+      flows: 
+        authorizationCode:
+          authorizationUrl: https://cvtdevb2c.b2clogin.com/cvtdevb2c.onmicrosoft.com/{POLICY-NAME}/oauth2/v2.0/authorize
+          tokenUrl: https://cvtdevb2c.b2clogin.com/cvtdevb2c.onmicrosoft.com/{POLICY-NAME}/oauth2/v2.0/token
+          scopes:
+            api.sukl.getevoucher: Grant consent to get e-voucher in SUKL
+    
+    oAuth2ClientCred:
+      type: oauth2
+      description: For more information, see https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow
+      flows: 
+        clientCredentials:
+          tokenUrl: https://login.microsoftonline.com/56865670-71f8-4015-adb0-d807100feb84/oauth2/v2.0/token
+          scopes:
+            app.sukl.getevoucher: Grant consent to get e-voucher in SUKL

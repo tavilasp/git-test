@@ -2431,6 +2431,405 @@
 				}
 			],
 			"id": "2aadfe5a-887c-4a89-9769-c86ef9036e1f"
+		},
+		{
+			"name": "Update an existing pet",
+			"id": "75ff3ab4-df3b-40df-91be-19f5e2ad2999",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "scope",
+							"value": "write:pets read:pets",
+							"type": "string"
+						},
+						{
+							"key": "authUrl",
+							"value": "https://petstore3.swagger.io/oauth/authorize",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "implicit",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tags",
+							"value": "[object Object]",
+							"disabled": true
+						},
+						{
+							"description": "(Required) ",
+							"key": "name",
+							"value": "doggie"
+						},
+						{
+							"description": "(Required) ",
+							"key": "photoUrls",
+							"value": "tempor cillum irure"
+						},
+						{
+							"key": "id",
+							"value": "10"
+						},
+						{
+							"description": "pet status in the store",
+							"key": "status",
+							"value": "sold"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/pet",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet"
+					]
+				},
+				"description": "Update an existing pet by Id"
+			},
+			"response": [
+				{
+					"id": "ffa440e1-d0ec-483c-85aa-b4e9364e6c2f",
+					"name": "Successful operation",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"description": "Added as a part of security scheme: oauth2",
+								"key": "Authorization",
+								"value": "<token>"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"description": "(Required) ",
+									"key": "name",
+									"value": "doggie"
+								},
+								{
+									"description": "(Required) ",
+									"key": "photoUrls",
+									"value": "tempor cillum irure"
+								},
+								{
+									"description": "(Required) ",
+									"key": "photoUrls",
+									"value": "ut fugiat adipisicing voluptate pariatur"
+								},
+								{
+									"key": "id",
+									"value": "10"
+								},
+								{
+									"key": "id",
+									"value": "1"
+								},
+								{
+									"key": "name",
+									"value": "Dogs"
+								},
+								{
+									"key": "tags",
+									"value": "[object Object]"
+								},
+								{
+									"key": "tags",
+									"value": "[object Object]"
+								},
+								{
+									"description": "pet status in the store",
+									"key": "status",
+									"value": "sold"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"tempor cillum irure\",\n    \"ut fugiat adipisicing voluptate pariatur\"\n  ],\n  \"id\": 10,\n  \"category\": {\n    \"id\": 1,\n    \"name\": \"Dogs\"\n  },\n  \"tags\": [\n    {\n      \"id\": 93228940,\n      \"name\": \"ut ad\"\n    },\n    {\n      \"id\": -79359983,\n      \"name\": \"cupidatat\"\n    }\n  ],\n  \"status\": \"sold\"\n}"
+				},
+				{
+					"id": "c43394d2-eff2-4eda-a678-614e0e7ab171",
+					"name": "Invalid ID supplied",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"description": "Added as a part of security scheme: oauth2",
+								"key": "Authorization",
+								"value": "<token>"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"description": "(Required) ",
+									"key": "name",
+									"value": "doggie"
+								},
+								{
+									"description": "(Required) ",
+									"key": "photoUrls",
+									"value": "tempor cillum irure"
+								},
+								{
+									"description": "(Required) ",
+									"key": "photoUrls",
+									"value": "ut fugiat adipisicing voluptate pariatur"
+								},
+								{
+									"key": "id",
+									"value": "10"
+								},
+								{
+									"key": "id",
+									"value": "1"
+								},
+								{
+									"key": "name",
+									"value": "Dogs"
+								},
+								{
+									"key": "tags",
+									"value": "[object Object]"
+								},
+								{
+									"key": "tags",
+									"value": "[object Object]"
+								},
+								{
+									"description": "pet status in the store",
+									"key": "status",
+									"value": "sold"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": []
+				},
+				{
+					"id": "85e5374f-7dd7-48e7-81c1-cff9f9c4f7a5",
+					"name": "Pet not found",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"description": "Added as a part of security scheme: oauth2",
+								"key": "Authorization",
+								"value": "<token>"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"description": "(Required) ",
+									"key": "name",
+									"value": "doggie"
+								},
+								{
+									"description": "(Required) ",
+									"key": "photoUrls",
+									"value": "tempor cillum irure"
+								},
+								{
+									"description": "(Required) ",
+									"key": "photoUrls",
+									"value": "ut fugiat adipisicing voluptate pariatur"
+								},
+								{
+									"key": "id",
+									"value": "10"
+								},
+								{
+									"key": "id",
+									"value": "1"
+								},
+								{
+									"key": "name",
+									"value": "Dogs"
+								},
+								{
+									"key": "tags",
+									"value": "[object Object]"
+								},
+								{
+									"key": "tags",
+									"value": "[object Object]"
+								},
+								{
+									"description": "pet status in the store",
+									"key": "status",
+									"value": "sold"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": []
+				},
+				{
+					"id": "cebab02c-35a5-45f5-8e3f-8db16bd0affe",
+					"name": "Validation exception",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"description": "Added as a part of security scheme: oauth2",
+								"key": "Authorization",
+								"value": "<token>"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"description": "(Required) ",
+									"key": "name",
+									"value": "doggie"
+								},
+								{
+									"description": "(Required) ",
+									"key": "photoUrls",
+									"value": "tempor cillum irure"
+								},
+								{
+									"description": "(Required) ",
+									"key": "photoUrls",
+									"value": "ut fugiat adipisicing voluptate pariatur"
+								},
+								{
+									"key": "id",
+									"value": "10"
+								},
+								{
+									"key": "id",
+									"value": "1"
+								},
+								{
+									"key": "name",
+									"value": "Dogs"
+								},
+								{
+									"key": "tags",
+									"value": "[object Object]"
+								},
+								{
+									"key": "tags",
+									"value": "[object Object]"
+								},
+								{
+									"description": "pet status in the store",
+									"key": "status",
+									"value": "sold"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet"
+							]
+						}
+					},
+					"status": "Method Not Allowed",
+					"code": 405,
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": []
+				}
+			]
 		}
 	],
 	"variable": [

@@ -2832,11 +2832,39 @@
 			]
 		}
 	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "b34a5f61-15e6-4d26-9afe-6ca586929fd4",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "5bbe750d-4991-4020-9870-c8a8f6aad040",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
 	"variable": [
 		{
-			"id": "8df94232-2194-4504-81e0-e166e15e1d81",
+			"id": "46a0376f-7fd2-44cf-919c-39fa3a39f7ec",
 			"key": "baseUrl",
 			"value": "https://petstore3.swagger.io/api/v3",
+			"type": "string"
+		},
+		{
+			"id": "e7593d7b-ccb3-4c98-9761-ac9fe320613b",
+			"key": "Teste",
+			"value": "Thiago",
 			"type": "string"
 		}
 	]
